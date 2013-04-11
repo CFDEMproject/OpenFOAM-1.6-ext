@@ -1,0 +1,8 @@
+# git-ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+
+# ignore - changes to the configuration
+_git_org/*
+_git_cfdem/*
+
+# end-of-file
