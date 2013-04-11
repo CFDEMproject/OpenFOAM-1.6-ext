@@ -1,0 +1,47 @@
+########################################
+# Compile OpenFOAM-1.6-ext in RHEL6
+# Setup CFDEMcoupling
+# Setup Liggghts
+# Christoph Goniva, DCS Computing GmbH
+########################################
+
+#- activate the sudo:
+chmod +w sudoers
+sudo gedit /etc/sudoers
+add the line: user   ALL = (ALL)    ALL
+chmod -w sudoers
+
+#- install packages
+sudo yum groupinstall 'Development Tools'
+sudo yum install openmpi-devel qt-devel qtwebkit-devel zlib-devel cmake
+
+#- download OpenFOAM
+git clone http://repo.or.cz/r/OpenFOAM-1.6-ext.git
+
+#- add to ~/.bashrc:
+source ~/OpenFOAM/OpenFOAM-1.6-ext/etc/bashrc
+export WM_NCOMPPROCS=8
+export FOAM_VERBOSE=1
+
+#- make sure no othe OpenFOAM version is sourced or installed (rpm package - check with env)
+
+#- check if OpenMPI paths are set (which mpicc)
+
+# (do not use this if not SYSTEMOPENMPI is used!) - you might add the mpi path: export PATH=/usr/lib64/openmpi/bin/:$PATH
+
+#- compile ThirdParty
+cd $HOME/OpenFOAM/OpenFOAM-1.6-ext/ThirdParty
+#./AllMake.stage0 >& log_Allwmake.stage0
+#./AllMake.stage1 >& log_Allwmake.stage1
+#./AllMake.stage2 >& log_Allwmake.stage2
+#./AllMake.stage3 >& log_Allwmake.stage3
+#./AllMake.stage4 >& log_Allwmake.stage4  (got a waring that QT not set - paraview is not installed)
+./AllMake >& log_Allwmake
+
+#- compile src
+cd $HOME/OpenFOAM/OpenFOAM-1.6-ext/src  (shortcut src)
+./Allwmake >& log_Allwmake
+
+#- compile the rest
+cd $HOME/OpenFOAM/OpenFOAM-1.6-ext
+./Allwmake >& log_Allwmake
